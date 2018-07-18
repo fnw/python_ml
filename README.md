@@ -1,4 +1,4 @@
-#python_ml
+# python_ml
 
 This is a repository I use to keep all the Machine Learning algorithms I've developed in one place, or at least the ones that are good enough to be used again. I have developed these algorithms either for some class I took or just for practice.
 
@@ -8,7 +8,7 @@ There are some simple tests, but I can't guarantee that these algorithms are cor
 
 Documentation will be improved with time.
 
-##Dependencies
+## Dependencies
 
 * Python > 2.7
 * Numpy
