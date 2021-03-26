@@ -2,8 +2,8 @@ import unittest
 
 import numpy as np
 
-from Ensemble.Selection.BaseSelection import BaseSelection
-from Ensemble.Generation.Bagging import Bagging
+from python_ml.Ensemble.Selection.BaseSelection import BaseSelection
+from python_ml.Ensemble.Generation.Bagging import Bagging
 
 class TestBaseSelection(unittest.TestCase):
     def setUp(self):

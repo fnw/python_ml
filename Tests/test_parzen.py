@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from ..Parzen.Parzen import ParzenDensityEstimator
+from python_ml.Parzen.Parzen import ParzenDensityEstimator
 
 class TestParzen(unittest.TestCase):
     def setUp(self):

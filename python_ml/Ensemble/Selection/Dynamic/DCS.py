@@ -1,4 +1,4 @@
-from Ensemble.Selection.BaseSelection import BaseSelection
+from python_ml.Ensemble.Selection.BaseSelection import BaseSelection
 import numpy as np
 
 class OLA(BaseSelection):

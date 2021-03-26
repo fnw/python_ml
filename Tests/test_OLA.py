@@ -2,9 +2,9 @@ import unittest
 
 import numpy as np
 
-from Ensemble.Selection.BaseSelection import BaseSelection
-from Ensemble.Selection.Dynamic.DCS import OLA
-from Ensemble.Generation.Bagging import Bagging
+from python_ml.Ensemble.Selection.BaseSelection import BaseSelection
+from python_ml.Ensemble.Selection.Dynamic.DCS import OLA
+from python_ml.Ensemble.Generation.Bagging import Bagging
 
 class test_ola(unittest.TestCase):
     def setUp(self):

@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 import numpy as np
-from Ensemble.Generation.Bagging import Bagging
+from python_ml.Ensemble.Generation.Bagging import Bagging
 
 class TestBagging(TestCase):
     def setUp(self):

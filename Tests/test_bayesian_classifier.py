@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from Bayes.BayesianClassifier import BayesianClassifier
+from python_ml.Bayes.BayesianClassifier import BayesianClassifier
 
 class TestBayesianClassifier(unittest.TestCase):
     def setUp(self):

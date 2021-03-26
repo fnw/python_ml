@@ -1,7 +1,7 @@
 from unittest import TestCase
 import numpy as np
 
-from Ensemble.Generation.RandomSubspace import RandomSubspace
+from python_ml.Ensemble.Generation.RandomSubspace import RandomSubspace
 
 class TestRandomSubspace(TestCase):
     def setUp(self):
