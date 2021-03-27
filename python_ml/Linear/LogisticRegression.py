@@ -17,7 +17,7 @@ def logistic_function(x):
 
 
 class LogisticRegression(BaseEstimator, RegressorMixin):
-    def __init__(self, learning_rate=1e-4, max_iter=250000):
+    def __init__(self, learning_rate=1e-4, max_iter=250000, regularization=None):
         self.learning_rate = learning_rate
         self.max_iter = max_iter
 
@@ -25,6 +25,8 @@ class LogisticRegression(BaseEstimator, RegressorMixin):
         self.n_examples = None
         self.n_dims = None
         self.weights = None
+
+        self.regularization = regularization
 
     def fit(self, X, y, print_error=False):
         X, y = check_X_y(X, y)
@@ -43,9 +45,15 @@ class LogisticRegression(BaseEstimator, RegressorMixin):
             logits = np.dot(fit_X, solution)
             probas = logistic_function(logits)
 
+            regularization_term = self.regularization * solution if self.regularization is not None else 0
+
             # theta_j = theta_j - sum(yi - y_pred)*xj
             error = (y - probas)[:, np.newaxis] * fit_X
-            error = np.sum(error, axis=0)
+            error = np.sum(error, axis=0) + regularization_term
+
+            if np.any(np.isnan(error)):
+                raise OverflowError(
+                    "Optimization has diverged. Try again with lower learning rate or stronger regularization.")
 
             # Maximizing the likelihood.
             solution += self.learning_rate * error

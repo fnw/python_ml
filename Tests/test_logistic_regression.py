@@ -17,15 +17,38 @@ class TestLogisticRegression(unittest.TestCase):
         self.train_X, self.train_y = X[:75, :], y[:75]
         self.test_X, self.test_y = X[75:, :], y[75:]
 
-        self.clf = LogisticRegression()
-
-        self.clf.fit(self.train_X, self.train_y)
         np.random.seed(None)
 
+    def _fit_classifier(self, regularization=None):
+        self.clf = LogisticRegression(regularization=regularization)
+
+        self.clf.fit(self.train_X, self.train_y)
+
     def test_was_fit(self):
+        self._fit_classifier()
         self.assertTrue(self.clf.weights is not None)
 
     def test_accuracy(self):
+        self._fit_classifier()
+        y_pred = self.clf.predict(self.test_X)
+
+        acc_clf = accuracy_score(y_pred, self.test_y)
+
+        sk = LR()
+        sk.fit(self.train_X, self.train_y)
+
+        y_pred = sk.predict(self.test_X)
+
+        acc_sk = accuracy_score(self.test_y, y_pred)
+
+        min_acc, max_acc = min(acc_clf, acc_sk), min(acc_clf, acc_sk)
+
+        percent_difference = (max_acc - min_acc) / max_acc
+
+        self.assertLess(percent_difference, 0.01)
+
+    def test_accuracy_regularization(self):
+        self._fit_classifier(0.01)
         y_pred = self.clf.predict(self.test_X)
 
         acc_clf = accuracy_score(y_pred, self.test_y)
