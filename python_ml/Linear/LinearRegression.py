@@ -55,6 +55,7 @@ class LinearRegression(BaseEstimator, RegressorMixin):
                 if np.any(np.isnan(error)):
                     raise OverflowError("Optimization has diverged. Try again with lower learning rate or stronger regularization.")
 
+                # Minimizing MSE.
                 solution -= learning_rate * error
                 #print(f'Error it {count}: ', error)
                 count += 1

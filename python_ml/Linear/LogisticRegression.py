@@ -49,13 +49,13 @@ class LogisticRegression(BaseEstimator, RegressorMixin):
 
             # theta_j = theta_j - sum(yi - y_pred)*xj
             error = (y - probas)[:, np.newaxis] * fit_X
-            error = np.sum(error, axis=0) + regularization_term
+            error = np.sum(error, axis=0) - regularization_term
 
             if np.any(np.isnan(error)):
                 raise OverflowError(
                     "Optimization has diverged. Try again with lower learning rate or stronger regularization.")
 
-            # Maximizing the likelihood.
+            # Maximizing the log likelihood, that's why the regularization term has a minus sign.
             solution += self.learning_rate * error
 
             if print_error:
