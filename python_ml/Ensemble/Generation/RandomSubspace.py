@@ -17,28 +17,26 @@ class RandomSubspace(object):
         self.training_sets = []
         self.selected_features = []
 
-    def __generate_sets(self,X,y):
+    def _generate_set(self, X, y):
         num_features_original = X.shape[1]
 
         if self.pool_size == 1:
             X_set = X
             y_set = y
-            self.training_sets.append((X_set, y_set))
             self.selected_features.append(np.arange(num_features_original))
         else:
-            for i in range(self.pool_size):
-                idx = np.random.choice(num_features_original, int(np.round(self.percentage * num_features_original)), replace=False)
-                X_set = X[:, idx]
-                y_set = y[:]
-                self.training_sets.append((X_set,y_set))
-                self.selected_features.append(idx)
+            idx = np.random.choice(num_features_original, int(np.round(self.percentage * num_features_original)), replace=False)
+            X_set = X[:, idx]
+            y_set = y[:]
+            self.selected_features.append(idx)
 
-    def fit(self,X,y):
+        return X_set, y_set
+
+    def fit(self, X, y):
         if not self.has_been_fit:
-            self.__generate_sets(X,y)
             for i, clf in enumerate(self.classifiers):
-                X_this, y_this = self.training_sets[i][0], self.training_sets[i][1]
-                clf.fit(X_this,y_this)
+                X_this, y_this = self._generate_set(X, y)
+                clf.fit(X_this, y_this)
 
         self.has_been_fit = True
 

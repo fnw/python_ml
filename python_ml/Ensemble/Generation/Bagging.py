@@ -28,10 +28,9 @@ class Bagging(object):
                 idx = np.random.choice(size_original, size_original)
                 X_set = X[idx, :]
                 y_set = y[idx]
-                self.training_sets.append((X_set,y_set))
+                self.training_sets.append((X_set, y_set))
 
-
-    def fit(self,X,y):
+    def fit(self, X, y):
         if not self.has_been_fit:
             self.__generate_sets(X,y)
             for i, clf in enumerate(self.classifiers):
@@ -57,7 +56,7 @@ class Bagging(object):
 
         return voting_scheme(predictions)
 
-    def score(self,X,y):
+    def score(self, X, y):
         return accuracy_score(y, self.predict(X))
 
 
