@@ -15,18 +15,15 @@ class TestBagging(TestCase):
 
     def test_fit(self):
         self.single.fit(self.X, self.y)
-        self.classifier.fit(self.X,self.y)
+        self.classifier.fit(self.X, self.y)
 
-        self.assertTrue(np.all(self.single.training_sets[0][0] == self.X))
-        self.assertTrue(np.all(self.single.training_sets[0][1] == self.y))
+        self.assertTrue(self.classifier.has_been_fit, msg='Classifier fit')
 
+    def test_predict(self):
+        self.classifier.fit(self.X, self.y)
 
-        self.assertEqual(len(self.classifier.training_sets),self.classifier.pool_size,msg='Numero de conjuntos')
+        y_pred = self.classifier.predict(self.X)
 
-        for i in range(self.classifier.pool_size):
-            self.assertEqual(self.classifier.training_sets[i][0].shape, self.X.shape,msg='Shape dos X')
-            self.assertEqual(self.classifier.training_sets[i][1].shape, self.y.shape,msg='Shape dos y')
-
-        self.assertTrue(self.classifier.has_been_fit,msg='Classifier fit')
+        self.assertEqual(len(y_pred), len(self.X))
 
 
