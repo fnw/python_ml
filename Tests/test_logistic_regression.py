@@ -41,11 +41,11 @@ class TestLogisticRegression(unittest.TestCase):
 
         acc_sk = accuracy_score(self.test_y, y_pred)
 
-        min_acc, max_acc = min(acc_clf, acc_sk), min(acc_clf, acc_sk)
+        min_acc, max_acc = min(acc_clf, acc_sk), max(acc_clf, acc_sk)
 
         percent_difference = (max_acc - min_acc) / max_acc
 
-        self.assertLess(percent_difference, 0.01)
+        self.assertLess(percent_difference, 0.05)
 
     def test_accuracy_regularization(self):
         self._fit_classifier(0.01)
@@ -60,11 +60,11 @@ class TestLogisticRegression(unittest.TestCase):
 
         acc_sk = accuracy_score(self.test_y, y_pred)
 
-        min_acc, max_acc = min(acc_clf, acc_sk), min(acc_clf, acc_sk)
+        min_acc, max_acc = min(acc_clf, acc_sk), max(acc_clf, acc_sk)
 
         percent_difference = (max_acc - min_acc) / max_acc
 
-        self.assertLess(percent_difference, 0.01)
+        self.assertLess(percent_difference, 0.05)
 
 
 

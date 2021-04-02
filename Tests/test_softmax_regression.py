@@ -50,7 +50,7 @@ class TestSoftmaxRegression(unittest.TestCase):
 
         acc_sk = accuracy_score(self.test_y, y_pred)
 
-        min_acc, max_acc = min(acc_clf, acc_sk), min(acc_clf, acc_sk)
+        min_acc, max_acc = min(acc_clf, acc_sk), max(acc_clf, acc_sk)
 
         percent_difference = (max_acc - min_acc) / max_acc
 
