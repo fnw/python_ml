@@ -6,12 +6,12 @@ from sklearn.datasets import make_classification
 from sklearn.metrics import accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 
-from python_ml.Tree.DecisionTree import DecisionTree
+from python_ml.Ensemble.Generation.RandomForest import RandomForest
 
 
 class TestDecisionTrees(unittest.TestCase):
     def setUp(self) -> None:
-        n_examples = 500
+        n_examples = 100
         n_train = int(0.75 * n_examples)
 
         np.random.seed(987321)
@@ -23,9 +23,11 @@ class TestDecisionTrees(unittest.TestCase):
         np.random.seed(None)
 
     def _fit_classifier(self):
-        self.clf = DecisionTree()
+        np.random.seed(987321)
+        self.clf = RandomForest(20)
 
         self.clf.fit(self.train_X, self.train_y)
+        np.random.seed(None)
 
     def _dfs(self, node):
         if node.left is not None and node.right is not None:
@@ -39,14 +41,7 @@ class TestDecisionTrees(unittest.TestCase):
 
     def test_all_leaves_have_class(self):
         self._fit_classifier()
-        self.assertTrue(self._dfs(self.clf.root))
-
-    def test_all_leaves_have_class_random_features(self):
-        self.clf = DecisionTree(use_random_features=True)
-
-        self.clf.fit(self.train_X, self.train_y)
-
-        self.assertTrue(self._dfs(self.clf.root))
+        self.assertTrue(all((self._dfs(tree.root) for tree in self.clf.classifiers)))
 
     def test_perfect_accuracy(self):
         # This example should be perfectly separable, and have an accuracy of 100%
@@ -70,7 +65,7 @@ class TestDecisionTrees(unittest.TestCase):
 
         y = ((X[:, 0] > 70) & (X[:, 1] == "yes")).astype(int)
 
-        clf = DecisionTree()
+        clf = RandomForest(20)
 
         clf.fit(X, y)
 
@@ -109,40 +104,5 @@ class TestDecisionTrees(unittest.TestCase):
 
         acc_sk = accuracy_score(y_pred, self.test_y)
 
-        min_acc, max_acc = min(acc_clf, acc_sk), max(acc_clf, acc_sk)
-
-        percent_difference = (max_acc - min_acc) / max_acc
-
-        # This may seem like a big difference, but it is really random. Some times my implementation is better,
-        # sometimes sklearn's implementation is better
-        # With a 1000 different random training sets, each with a 1000 random examples, the average difference was less
-        # than a single percentage point.
-        # This value was chosen so it can be reproducible, as everything is seeded, and we can ensure we are not intro-
-        # ducing regressions.
-
-        self.assertLess(percent_difference, 0.07)
-
-    def test_predict_random_features(self):
-        self._fit_classifier()
-
-        y_pred = self.clf.predict(self.test_X)
-
-        acc_clf = accuracy_score(y_pred, self.test_y)
-
-        clf_random = DecisionTree(use_random_features=True)
-
-        np.random.seed(987321)
-
-        clf_random.fit(self.train_X, self.train_y)
-
-        np.random.seed(None)
-
-        y_pred = clf_random.predict(self.test_X)
-
-        acc_clf_random = accuracy_score(y_pred, self.test_y)
-
-        min_acc, max_acc = min(acc_clf, acc_clf_random), max(acc_clf, acc_clf_random)
-
-        percent_difference = (max_acc - min_acc) / max_acc
-
-        self.assertLess(percent_difference, 0.03)
+        # The random forest should be better than a single classifier.
+        self.assertGreaterEqual(acc_clf, acc_sk)

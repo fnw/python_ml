@@ -23,7 +23,7 @@ class TreeNode:
 
 
 class DecisionTree:
-    def __init__(self, algorithm='CART'):
+    def __init__(self, algorithm='CART', use_random_features=False):
         self.algorithm = algorithm
         self.root = None
         self.variable_types = []
@@ -31,6 +31,9 @@ class DecisionTree:
         self.class_counts = None
         self.class_priors = None
         self.n_classes = None
+
+        self.use_random_features = use_random_features
+        self.n_random_features = None
 
     def _calc_joint_class_node(self, y, class_idx):
         n_j = self.class_counts[class_idx]
@@ -128,11 +131,17 @@ class DecisionTree:
 
         variables_remaining = [i for i in range(num_variables) if i not in already_used_variables]
 
+        # If we can't split anymore, just return the most frequent class
         if not variables_remaining:
             max_class_idx = np.argmax(counts)
             max_class = classes_present[max_class_idx]
 
             return TreeNode(None, None, None, class_prediction=max_class)
+
+        # Use random features, for Random Forests
+        if self.use_random_features:
+            if self.n_random_features < len(variables_remaining):
+                variables_remaining = np.random.choice(variables_remaining, self.n_random_features, replace=False)
 
         information_gains, split_values = zip(*(self._calculate_information_gain(X, y, idx, variable_idx)
                                                 for variable_idx in variables_remaining))
@@ -158,6 +167,9 @@ class DecisionTree:
         self.n_classes = len(self.class_counts)
 
         n_dims = X.shape[1]
+
+        if self.use_random_features:
+            self.n_random_features = int(np.log2(n_dims) + 1)
 
         for d in range(n_dims):
             value = X[0, d]
