@@ -204,36 +204,3 @@ class DecisionTree:
         predictions = [pred if pred is not None else np.random.randint(self.n_classes) for pred in predictions]
 
         return np.array(predictions)
-
-def old_main():
-    n_examples = 1000
-
-    X = []
-    for i in range(n_examples):
-        grade = np.random.randint(100)
-        has_extracurricular = np.random.choice(["no", "yes"])
-
-        X.append([grade, has_extracurricular])
-
-    X = np.array(X, dtype=object)
-
-    y = ((X[:, 0] > 70) & (X[:, 1] == "yes")).astype(int)
-
-    clf = DecisionTree()
-
-    clf.fit(X, y)
-
-    test_X = []
-    for i in range(n_examples):
-        grade = np.random.randint(100)
-        has_extracurricular = np.random.choice(["no", "yes"])
-
-        test_X.append([grade, has_extracurricular])
-
-    test_X = np.array(test_X, dtype=object)
-
-    test_y = ((test_X[:, 0] > 70) & (test_X[:, 1] == "yes")).astype(int)
-
-    y_pred = clf.predict(test_X)
-
-    print('Accuracy: ', accuracy_score(y_pred, test_y))

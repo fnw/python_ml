@@ -41,6 +41,49 @@ class TestLogisticRegression(unittest.TestCase):
         self._fit_classifier()
         self.assertTrue(self._dfs(self.clf.root))
 
+    def test_perfect_accuracy(self):
+        # This example should be perfectly separable, and have an accuracy of 100%
+        # This simulates college admissions given a test score and whether the person has extracurriculars.
+        # I came up with it, and the semantics don't matter, what matters is that the class label is defined by a simple
+        # rule: score > 70 and has extracurriculars.
+
+        n_examples = 1000
+
+        X = []
+
+        np.random.seed(987321)
+
+        for i in range(n_examples):
+            grade = np.random.randint(100)
+            has_extracurricular = np.random.choice(["no", "yes"])
+
+            X.append([grade, has_extracurricular])
+
+        X = np.array(X, dtype=object)
+
+        y = ((X[:, 0] > 70) & (X[:, 1] == "yes")).astype(int)
+
+        clf = DecisionTree()
+
+        clf.fit(X, y)
+
+        test_X = []
+        for i in range(n_examples):
+            grade = np.random.randint(100)
+            has_extracurricular = np.random.choice(["no", "yes"])
+
+            test_X.append([grade, has_extracurricular])
+
+        np.random.seed(None)
+
+        test_X = np.array(test_X, dtype=object)
+
+        test_y = ((test_X[:, 0] > 70) & (test_X[:, 1] == "yes")).astype(int)
+
+        y_pred = clf.predict(test_X)
+
+        self.assertEqual(accuracy_score(y_pred, test_y), 1.0)
+
     def test_accuracy(self):
         self._fit_classifier()
 
