@@ -53,7 +53,7 @@ class BayesianClassifier(BaseEstimator, ClassifierMixin):
             l = l / self.vars
             l = -0.5 * np.sum(l, axis=1)
 
-            l += -0.5* np.sum(self.log_vars, axis=1)
+            l += -0.5 * np.sum(self.log_vars, axis=1)
             l += constant
 
             likelihood[i, :] = l
@@ -68,7 +68,7 @@ class BayesianClassifier(BaseEstimator, ClassifierMixin):
         probas = self.predict_likelihood(X)
 
         probas *= self.class_probabilities
-        probas /= np.sum(probas,axis=1).reshape(n_examples,1)
+        probas /= np.sum(probas, axis=1).reshape(n_examples, 1)
 
         probas[np.isnan(probas)] = 0
 
