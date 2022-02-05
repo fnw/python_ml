@@ -32,9 +32,9 @@ class KNearestNeighbors:
             else:
                 k = self.k
 
-        dists = np.vstack([np.sum((row - self.X)**2, axis=1) for row in X])
+        dists = np.sum((X[:, np.newaxis, :] - self.X) ** 2, axis=-1)
 
-        idx = np.argpartition(dists, (0, k), axis=1)[:, :k]
+        idx = np.argpartition(dists, range(k), axis=1)[:, :k]
 
         nn = self.X[idx, :]
 
