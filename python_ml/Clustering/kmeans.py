@@ -71,15 +71,6 @@ class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
     def fit_predict(self, X, y=None):
         return self.fit(X, y).labels
 
-    # def fit_transform(self, X, y=None, sample_weight=None):
-    #    return self.fit(X, sample_weight=sample_weight)._transform(X)
-
-    # def transform(self, X):
-    #    return self._transform(X)
-
-    # def _transform(self, X):
-    #    return euclidean_distances(X, self.cluster_centers_)
-
     def predict(self, X, sample_weight=None):
         if not self.has_been_fit:
             raise ValueError('KMeans object has not been fit')
@@ -88,23 +79,3 @@ class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
         cluster_assignments = np.argmin(dist_to_centroids, axis=1)
 
         return self.cluster_labels[cluster_assignments]
-
-
-if __name__ == '__main__':
-    n_centers = 4
-    X, y, centers = make_blobs(n_samples=500, n_features=2, centers=n_centers, return_centers=True)
-    km = KMeans(n_clusters=n_centers)
-
-    predictions = km.fit_predict(X, y)
-
-    predictions2 = km.predict(X)
-
-    a = np.all(predictions == predictions2)
-
-    plt.scatter(X[:, 0], X[:, 1], c=km.cluster_assignments)
-
-    for i in range(n_centers):
-        plt.plot(centers[i, 0], centers[i, 1], marker='o', c='orange')
-        plt.plot(km.centroids[i, 0], km.centroids[i, 1], marker='^', c='green')
-
-    plt.show()
