@@ -2,6 +2,8 @@
 
 This is a repository I use to keep all the Machine Learning algorithms I've developed in one place. I have developed these algorithms either for some class I took or just for practice.
 
+**Update 17/05/2026** Adopted modern Python project conventions, with pyproject.toml. I now recommend UV for dependencies management.
+
 **Update 26/03/2021:** I've revived this repository. I've been using it mainly as a study tool, in order to implement algorithms I haven't worked 
 with before or haven't worked with in a long time. I will most likely be adding algorithms from Stanford's CS229 class and Bishop's PRML book (back to basics!).
 Later on I might move on to stuff that's closer to what I actually work with (mainly Deep Learning).
@@ -15,8 +17,6 @@ Documentation will be improved with time.
 ## Dependencies
 
 * Python >= 3.8 (Haven't tested with older versions)
-* Scikit-learn >= 0.24.1
-
-I have installed these dependencies using conda, so keep in mind that other packaging systems might have different versions for scikit-learn's dependencies. 
+* Scikit-learn >= 1.3.2
 
 Also, if you're looking for libraries for Ensemble Methods, check out [brew](https://github.com/viisar/brew) and [DESlib](https://github.com/Menelau/DESlib)

@@ -1,0 +1,33 @@
+[build-system]
+requires = ["uv_build >= 0.11.7, <0.12.0"]
+build-backend = "uv_build"
+
+[project]
+name = "python-ml"
+version = "0.0.2"
+dependencies = [
+  "scikit-learn >= 1.3.2",
+  "pytest"
+]
+requires-python = ">=3.8"
+authors = [
+  {name = "Felipe Nunes Walmsley", email = "Felipe.NunesWalmsley@gmail.com"},
+]
+maintainers = [
+  {name = "Felipe Nunes Walmsley", email = "Felipe.NunesWalmsley@gmail.com"},
+]
+description = "Simple implementations of basic ML algorithms in Python."
+readme = "README.md"
+license = "BSD-2-Clause"
+license-files = ["LICENSE"]
+keywords = ["Machine Learning", "Linear Regression", "kNNN"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+
+[project.urls]
+Homepage = "htts://github.com/fnw/python_ml"
+Repository = "https://github.com/fnw/python_ml.git"
+"Bug Tracker" = "https://github.com/fnw/python_ml/issues"

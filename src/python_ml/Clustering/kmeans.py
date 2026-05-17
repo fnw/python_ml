@@ -1,12 +1,9 @@
 import numpy as np
 from scipy.stats import mode
 from sklearn.base import BaseEstimator, ClusterMixin, TransformerMixin
-from sklearn.datasets import make_blobs
-import matplotlib.pyplot as plt
 
 
 class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
-
     def __init__(
         self,
         n_clusters,
@@ -40,14 +37,18 @@ class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
         while centroid_diffs > self.tol and it < self.max_iter:
             centroid_diffs = 0
 
-            dist_to_centroids = np.sum((X[:, np.newaxis, :] - self.centroids) ** 2, axis=-1)
+            dist_to_centroids = np.sum(
+                (X[:, np.newaxis, :] - self.centroids) ** 2, axis=-1
+            )
             self.cluster_assignments = np.argmin(dist_to_centroids, axis=1)
 
             for i in range(self.n_clusters):
                 samples_this_clusters = X[self.cluster_assignments == i, :]
                 new_centroid = np.mean(samples_this_clusters, axis=0)
 
-                centroid_diffs += np.sum((new_centroid - self.centroids[i, :]) ** 2, axis=-1)
+                centroid_diffs += np.sum(
+                    (new_centroid - self.centroids[i, :]) ** 2, axis=-1
+                )
 
                 self.centroids[i, :] = new_centroid
 
@@ -61,7 +62,7 @@ class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
         for i in range(self.n_clusters):
             idx_this_cluster = self.cluster_assignments == i
             classes_this_cluster = y[idx_this_cluster]
-            most_common_class = mode(classes_this_cluster).mode[0]
+            most_common_class = mode(classes_this_cluster).mode
             self.cluster_labels[i] = most_common_class
             self.labels[idx_this_cluster] = most_common_class
 
@@ -73,7 +74,7 @@ class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
 
     def predict(self, X, sample_weight=None):
         if not self.has_been_fit:
-            raise ValueError('KMeans object has not been fit')
+            raise ValueError("KMeans object has not been fit")
 
         dist_to_centroids = np.sum((X[:, np.newaxis, :] - self.centroids) ** 2, axis=-1)
         cluster_assignments = np.argmin(dist_to_centroids, axis=1)
