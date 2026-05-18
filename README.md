@@ -2,7 +2,7 @@
 
 This is a repository I use to keep all the Machine Learning algorithms I've developed in one place. I have developed these algorithms either for some class I took or just for practice.
 
-**Update 17/05/2026** Adopted modern Python project conventions, with pyproject.toml. I now recommend UV for dependencies management.
+**Update 18/05/2026** Adopted modern Python project conventions, with pyproject.toml. I now recommend UV for dependencies management. Some tests are breaking, mostly due to changes in behavior with newer lib versions. I'm working on fixing them.
 
 **Update 26/03/2021:** I've revived this repository. I've been using it mainly as a study tool, in order to implement algorithms I haven't worked 
 with before or haven't worked with in a long time. I will most likely be adding algorithms from Stanford's CS229 class and Bishop's PRML book (back to basics!).
