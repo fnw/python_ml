@@ -5,6 +5,7 @@ import numpy as np
 from python_ml.Ensemble.Selection.BaseSelection import BaseSelection
 from python_ml.Ensemble.Generation.Bagging import Bagging
 
+
 class TestBaseSelection(unittest.TestCase):
     def setUp(self):
         self.true_labels = np.array([1, 1, 0, 0, 1, 0])
@@ -25,7 +26,13 @@ class TestBaseSelection(unittest.TestCase):
         self.selector = BaseSelection(self.X, self.y, n_neighbors=3)
 
     def test_predict_nearest(self):
-        predictions, actual_values = self.selector.predict_nearest(self.X[0:2,:], self.bag)
+        predictions, actual_values = self.selector.predict_nearest(
+            self.X[0:2, :], self.bag, voting_scheme="majority vote"
+        )
 
-        self.assertEqual(predictions.shape, (2,3,1))
-        self.assertEqual(actual_values.shape, (2,3))
+        self.assertEqual(predictions.shape, (2, 3, 1))
+        self.assertEqual(actual_values.shape, (2, 3))
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,6 +1,7 @@
 from python_ml.Ensemble.Selection.BaseSelection import BaseSelection
 import numpy as np
 
+
 class OLA(BaseSelection):
     def __init__(self, X_val, y_val, n_neighbors):
         super(OLA, self).__init__(X_val, y_val, n_neighbors)
@@ -11,16 +12,16 @@ class OLA(BaseSelection):
 
         n_classifiers = predictions.shape[2]
 
-        best_classifiers = np.zeros((num_queries),dtype=int)
+        best_classifiers = np.zeros((num_queries), dtype=int)
 
         for i in range(num_queries):
-            pred_neighbors = predictions[i,:,:]
-            labels_neighbors = actual_labels[i,:]
+            pred_neighbors = predictions[i, :, :]
+            labels_neighbors = actual_labels[i, :]
 
-            labels_neighbors = np.reshape(labels_neighbors,(n_neighbors, 1))
-            labels_neighbors = np.tile(labels_neighbors,(1,n_classifiers))
+            labels_neighbors = np.reshape(labels_neighbors, (n_neighbors, 1))
+            labels_neighbors = np.tile(labels_neighbors, (1, n_classifiers))
 
-            correct = (pred_neighbors == labels_neighbors)
+            correct = pred_neighbors == labels_neighbors
             correct = np.sum(correct, axis=0)
 
             best = np.argmax(correct)
@@ -29,7 +30,9 @@ class OLA(BaseSelection):
         return best_classifiers
 
     def select(self, X_query, ensemble):
-        predictions, actual_labels = self.predict_nearest(X_query, ensemble)
+        predictions, actual_labels = self.predict_nearest(
+            X_query, ensemble, voting_scheme=None
+        )
         best = self.best_local_accuracy(predictions, actual_labels)
 
         return best
@@ -41,35 +44,42 @@ class OLA(BaseSelection):
         predictions = np.zeros(num_queries)
 
         for i in range(num_queries):
-            predictions[i] = ensemble.classifiers[best_classifiers[i]].predict(X_query[i,:].reshape(1,-1))
+            predictions[i] = ensemble.classifiers[best_classifiers[i]].predict(
+                X_query[i, :].reshape(1, -1)
+            )[0]
 
         return predictions
+
 
 class LCA(BaseSelection):
     def __init__(self, X_val, y_val, n_neighbors):
         super(LCA, self).__init__(X_val, y_val, n_neighbors)
 
-    def best_local_class_accuracy(self, predictions_nearest, predictions_query, actual_labels):
+    def best_local_class_accuracy(
+        self, predictions_nearest, predictions_query, actual_labels
+    ):
         num_queries = actual_labels.shape[0]
         n_neighbors = self.k
 
         n_classifiers = predictions_nearest.shape[2]
 
-        best_classifiers = np.zeros((num_queries),dtype=int)
+        best_classifiers = np.zeros((num_queries), dtype=int)
 
         for i in range(num_queries):
-            pred_neighbors = predictions_nearest[i,:,:]
-            labels_neighbors = actual_labels[i,:]
+            pred_neighbors = predictions_nearest[i, :, :]
+            labels_neighbors = actual_labels[i, :]
             label_query = predictions_query[i]
 
-            labels_neighbors = np.reshape(labels_neighbors,(n_neighbors, 1))
-            labels_neighbors = np.tile(labels_neighbors,(1,n_classifiers))
+            labels_neighbors = np.reshape(labels_neighbors, (n_neighbors, 1))
+            labels_neighbors = np.tile(labels_neighbors, (1, n_classifiers))
 
             same_predicted_class = pred_neighbors == label_query
 
-            correct = np.logical_and((pred_neighbors == labels_neighbors),same_predicted_class)
+            correct = np.logical_and(
+                (pred_neighbors == labels_neighbors), same_predicted_class
+            )
             correct = np.sum(correct, axis=0)
-            correct = correct/np.sum(same_predicted_class, axis=0).astype(float)
+            correct = correct / np.sum(same_predicted_class, axis=0).astype(float)
 
             is_division_by_zero = np.logical_not(np.isfinite(correct))
 
@@ -81,9 +91,13 @@ class LCA(BaseSelection):
         return best_classifiers
 
     def select(self, X_query, ensemble):
-        predictions_nearest, actual_labels = self.predict_nearest(X_query, ensemble)
+        predictions_nearest, actual_labels = self.predict_nearest(
+            X_query, ensemble, voting_scheme=None
+        )
         predictions_query = ensemble.predict(X_query)
-        best = self.best_local_class_accuracy(predictions_nearest, predictions_query, actual_labels)
+        best = self.best_local_class_accuracy(
+            predictions_nearest, predictions_query, actual_labels
+        )
 
         return best
 
@@ -94,12 +108,8 @@ class LCA(BaseSelection):
         predictions = np.zeros(num_queries)
 
         for i in range(num_queries):
-            predictions[i] = ensemble.classifiers[best_classifiers[i]].predict(X_query[i,:].reshape(1,-1))
+            predictions[i] = ensemble.classifiers[best_classifiers[i]].predict(
+                X_query[i, :].reshape(1, -1)
+            )[0]
 
         return predictions
-
-
-
-
-
-

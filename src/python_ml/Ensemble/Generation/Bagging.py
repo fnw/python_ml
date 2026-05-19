@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.base import clone
 from sklearn.metrics import accuracy_score
 
-from python_ml.Ensemble.Combination.VotingSchemes import majority_voting
+from python_ml.Ensemble.Combination.VotingSchemes import majority_voting, no_voting
 
 
 def all_classes_present(y_prime, y):
@@ -62,13 +62,17 @@ class Bagging(object):
 
             self.has_been_fit = True
 
-    def predict(self, X, voting_scheme='majority vote'):
+    def predict(self, X, voting_scheme="majority vote"):
         if not self.has_been_fit:
-            raise Exception('Classifier has not been fit')
+            raise Exception("Classifier has not been fit")
 
-        if isinstance(voting_scheme,str):
-            if voting_scheme == 'majority vote':
+        if isinstance(voting_scheme, str):
+            if voting_scheme == "majority vote":
                 voting_scheme = majority_voting
+        elif voting_scheme is None:
+            voting_scheme = no_voting
+        else:
+            raise ValueError("Invalid voting scheme: ", voting_scheme)
 
         predictions = []
 
@@ -81,6 +85,3 @@ class Bagging(object):
 
     def score(self, X, y):
         return accuracy_score(y, self.predict(X))
-
-
-

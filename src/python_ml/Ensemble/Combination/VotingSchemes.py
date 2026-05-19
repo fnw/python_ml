@@ -11,3 +11,8 @@ def majority_voting(y):
         values, counts = mode(y, axis=1)
 
     return values
+
+
+def no_voting(y):
+    return y
+

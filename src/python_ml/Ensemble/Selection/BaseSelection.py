@@ -4,6 +4,7 @@ import numpy as np
 
 from sklearn.neighbors import NearestNeighbors
 
+
 class BaseSelection(object):
     def __init__(self, X_val, y_val, n_neighbors):
         self.__X = X_val
@@ -18,7 +19,7 @@ class BaseSelection(object):
         _, ind = self.__knn.kneighbors(X=X_query, n_neighbors=self.k)
         return ind
 
-    def predict_nearest(self, X_query, ensemble):
+    def predict_nearest(self, X_query, ensemble, voting_scheme):
         ind = self.kNearest(X_query)
 
         actual_k = self.k
@@ -26,12 +27,18 @@ class BaseSelection(object):
 
         ind = ind.flatten()
 
-        X_val_nearest = self.__X[ind,:]
+        X_val_nearest = self.__X[ind, :]
         y_val_nearest = self.__y[ind]
 
-        predictions = ensemble.predict(X_val_nearest)
+        predictions = ensemble.predict(X_val_nearest, voting_scheme=voting_scheme)
 
-        predictions = np.reshape(predictions, (num_queries, actual_k, predictions.shape[1]))
+        if voting_scheme is None:
+            predictions = np.reshape(
+                predictions, (num_queries, actual_k, predictions.shape[1])
+            )
+        else:
+            predictions = np.reshape(predictions, (num_queries, actual_k, 1))
+
         y_val_nearest = np.reshape(y_val_nearest, (num_queries, actual_k))
 
         return predictions, y_val_nearest
