@@ -4,12 +4,7 @@ from sklearn.base import BaseEstimator, ClusterMixin, TransformerMixin
 
 
 class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
-    def __init__(
-        self,
-        n_clusters,
-        max_iter=300,
-        tol=1e-4,
-    ):
+    def __init__(self, n_clusters, max_iter=300, tol=1e-4, random_state=42):
 
         self.n_clusters = n_clusters
         self.centroids = None
@@ -20,16 +15,27 @@ class KMeans(TransformerMixin, ClusterMixin, BaseEstimator):
         self.max_iter = max_iter
         self.tol = tol
 
+        self.random_state = random_state
+
         self.has_been_fit = False
 
     def fit(self, X, y=None):
         n_samples = X.shape[0]
-        random_idxs = np.random.randint(0, n_samples, size=self.n_clusters)
 
-        self.centroids = X[random_idxs]
         self.cluster_labels = np.zeros(self.n_clusters)
         self.cluster_assignments = np.zeros(n_samples)
         self.labels = np.zeros(n_samples)
+
+        x_min, x_max = np.min(X, axis=0), np.max(X, axis=0)
+
+        np.random.seed(self.random_state)
+
+        self.centroids = np.random.uniform(
+            low=x_min, high=x_max, size=(self.n_clusters, X.shape[1])
+        )
+        dist_to_centroids = np.sum((X[:, np.newaxis, :] - self.centroids) ** 2, axis=-1)
+        prototype_indexes = np.argmin(dist_to_centroids, axis=0)
+        self.centroids = X[prototype_indexes, :]
 
         centroid_diffs = 1e6
         it = 0
